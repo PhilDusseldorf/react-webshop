@@ -5,6 +5,7 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -35,7 +36,10 @@ export const signInWithGooglePopup = () =>
 
 export const db = getFirestore();
 
-export const createUserDocFromAuth = async (userAuth, additionalInformation = {}) => {
+export const createUserDocFromAuth = async (
+  userAuth,
+  additionalInformation = {}
+) => {
   if (!userAuth) {
     console.log("error creating the user: no auth found!");
     return;
@@ -49,7 +53,12 @@ export const createUserDocFromAuth = async (userAuth, additionalInformation = {}
     const createdAt = new Date();
 
     try {
-      await setDoc(userDocRef, { displayName, email, createdAt, ...additionalInformation });
+      await setDoc(userDocRef, {
+        displayName,
+        email,
+        createdAt,
+        ...additionalInformation,
+      });
     } catch (error) {
       console.log("error creating the user", error.message);
     }
@@ -58,10 +67,17 @@ export const createUserDocFromAuth = async (userAuth, additionalInformation = {}
 };
 
 export const createAuthUserDefault = async (email, password) => {
-  let promise = undefined;
   if (!email || !password) {
     console.log("error creating the user: no email or password found!");
     return;
   }
-    return await createUserWithEmailAndPassword(auth, email, password);
+  return await createUserWithEmailAndPassword(auth, email, password);
+};
+
+export const signInDefault = async (email, password) => {
+  if (!email || !password) {
+    console.log("error signing in: no email or password found!");
+    return;
+  }
+  return await signInWithEmailAndPassword(auth, email, password);
 };

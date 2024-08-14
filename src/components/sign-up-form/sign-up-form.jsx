@@ -20,6 +20,11 @@ const SignUpForm = () => {
   const [formFields, setFormFields] = useState(signUpFormFields);
   const { displayName, email, password, confirmPassword } = formFields;
 
+  
+      const resetFormFields = () => {
+        setFormFields(signUpFormFields);
+      }
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (password !== confirmPassword) {
@@ -30,6 +35,8 @@ const SignUpForm = () => {
     try {
       const { user } = await createAuthUserDefault(email, password);
       await createUserDocFromAuth(user, { displayName });
+      resetFormFields();
+      // TODO: refer to confirmation site or alert user otherwise of success
     } catch (error) {
       alert(`Error: ${error.message}`);
     }
