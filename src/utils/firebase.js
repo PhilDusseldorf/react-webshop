@@ -7,6 +7,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -100,4 +101,8 @@ export const signOutUser = async () => {
     console.error("Error signing out:", error.message);
     throw error;
   }
+};
+
+export const onAuthStateChangedListener = (callback) => {
+  onAuthStateChanged(auth, callback);
 };
