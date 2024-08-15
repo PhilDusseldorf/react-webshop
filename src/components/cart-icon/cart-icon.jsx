@@ -6,7 +6,6 @@ const CartIcon = () => {
   const { setIsCartExpanded, isCartExpanded } = useContext(CartContext);
 
   const toggleCart = () => {
-    console.log(`toggle clicked with isCartexpanded = ${isCartExpanded.valueOf}`);
     setIsCartExpanded(!isCartExpanded);
   };
 
