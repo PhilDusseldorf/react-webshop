@@ -5,18 +5,19 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAnjV83fS8G8htM9EpgnMEPPSfgQTjcffg",
-  authDomain: "react-webshop-db-3d89f.firebaseapp.com",
-  projectId: "react-webshop-db-3d89f",
-  storageBucket: "react-webshop-db-3d89f.appspot.com",
-  messagingSenderId: "517975534258",
-  appId: "1:517975534258:web:d9b884b418e577afe5b7ab",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase
@@ -35,9 +36,12 @@ export const signInWithGooglePopup = () =>
 
 export const db = getFirestore();
 
-export const createUserDocFromAuth = async (userAuth, additionalInformation = {}) => {
+export const createUserDocFromAuth = async (
+  userAuth,
+  additionalInformation = {}
+) => {
   if (!userAuth) {
-    console.log("error creating the user: no auth found!");
+    console.error("error creating the user: no auth found!");
     return;
   }
 
@@ -49,19 +53,37 @@ export const createUserDocFromAuth = async (userAuth, additionalInformation = {}
     const createdAt = new Date();
 
     try {
-      await setDoc(userDocRef, { displayName, email, createdAt, ...additionalInformation });
+      await setDoc(userDocRef, {
+        displayName,
+        email,
+        createdAt,
+        ...additionalInformation,
+      });
     } catch (error) {
-      console.log("error creating the user", error.message);
+      console.error("error creating the user", error.message);
     }
   }
   return userDocRef;
 };
 
 export const createAuthUserDefault = async (email, password) => {
-  let promise = undefined;
   if (!email || !password) {
-    console.log("error creating the user: no email or password found!");
+    console.error("error creating the user: no email or password found!");
     return;
   }
-    return await createUserWithEmailAndPassword(auth, email, password);
+  return await createUserWithEmailAndPassword(auth, email, password);
+};
+
+export const signInDefault = async (email, password) => {
+  if (!email || !password) {
+    console.error("error signing in: no email or password found!");
+    return;
+  }
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    return userCredential;
+  } catch (error) {
+    console.error("Error signing in:", error.message);
+    throw error;
+  }
 };
