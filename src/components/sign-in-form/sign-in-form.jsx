@@ -3,12 +3,12 @@ import {
   signInWithGooglePopup,
   signInDefault,
 } from "../../utils/firebase";
-import Button from "../../components/button/button";
-import FormInput from "../../components/form-input/form-input";
+import Button from "../button/button";
+import FormInput from "../form-input/form-input";
 import { useState } from "react";
 
 import "./sign-in-form.styles.scss";
-import GoogleSignInButton from "../../components/google-sign-in-button/google-sign-in-button";
+import GoogleSignInButton from "../google-sign-in-button/google-sign-in-button";
 
 const signInFormFields = {
   email: "",
@@ -33,10 +33,16 @@ const SignInForm = () => {
     setFormFields({ ...formFields, [name]: value });
   };
 
-  const handleSignIn = () => {
-    const promise = signInDefault(email, password);
-    console.log(promise);
-    resetFormFields();
+  const handleSignIn = async (event) => {
+    event.preventDefault();
+
+    try {
+      await signInDefault(email, password);
+      resetFormFields();
+      
+    } catch (error) {
+      alert(`Error: ${error.message}`);
+    }
   };
 
   return (

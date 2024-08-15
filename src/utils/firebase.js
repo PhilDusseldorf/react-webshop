@@ -41,7 +41,7 @@ export const createUserDocFromAuth = async (
   additionalInformation = {}
 ) => {
   if (!userAuth) {
-    console.log("error creating the user: no auth found!");
+    console.error("error creating the user: no auth found!");
     return;
   }
 
@@ -60,7 +60,7 @@ export const createUserDocFromAuth = async (
         ...additionalInformation,
       });
     } catch (error) {
-      console.log("error creating the user", error.message);
+      console.error("error creating the user", error.message);
     }
   }
   return userDocRef;
@@ -68,7 +68,7 @@ export const createUserDocFromAuth = async (
 
 export const createAuthUserDefault = async (email, password) => {
   if (!email || !password) {
-    console.log("error creating the user: no email or password found!");
+    console.error("error creating the user: no email or password found!");
     return;
   }
   return await createUserWithEmailAndPassword(auth, email, password);
@@ -76,8 +76,14 @@ export const createAuthUserDefault = async (email, password) => {
 
 export const signInDefault = async (email, password) => {
   if (!email || !password) {
-    console.log("error signing in: no email or password found!");
+    console.error("error signing in: no email or password found!");
     return;
   }
-  return await signInWithEmailAndPassword(auth, email, password);
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    return userCredential;
+  } catch (error) {
+    console.error("Error signing in:", error.message);
+    throw error;
+  }
 };
