@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Button from "../button/button";
 
-import './sign-up-form.styles.scss';
+import { UserContext } from "../../contexts/user.context";
+import "./sign-up-form.styles.scss";
 
 import {
   createAuthUserDefault,
@@ -20,10 +21,11 @@ const SignUpForm = () => {
   const [formFields, setFormFields] = useState(signUpFormFields);
   const { displayName, email, password, confirmPassword } = formFields;
 
-  
-      const resetFormFields = () => {
-        setFormFields(signUpFormFields);
-      }
+  const { setCurrentUser } = useContext(UserContext);
+
+  const resetFormFields = () => {
+    setFormFields(signUpFormFields);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -34,6 +36,7 @@ const SignUpForm = () => {
 
     try {
       const { user } = await createAuthUserDefault(email, password);
+      setCurrentUser(user);
       await createUserDocFromAuth(user, { displayName });
       resetFormFields();
       // TODO: refer to confirmation site or alert user otherwise of success
