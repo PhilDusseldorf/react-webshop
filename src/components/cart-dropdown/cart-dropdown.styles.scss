@@ -21,6 +21,8 @@
     display: flex;
     flex-direction: column;
     overflow: scroll;
+    overflow-x: hidden;  // Versteckt die horizontale Scrollleiste
+    overflow-y: auto;    // Beibehaltung der vertikalen Scrollleiste, falls nötig
   }
 
   button {

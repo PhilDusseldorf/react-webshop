@@ -3,7 +3,7 @@ import { ReactComponent as Icon } from "../../assets/shopping-bag.svg";
 import { useContext } from "react";
 import { CartContext } from "../../contexts/cart.context";
 const CartIcon = () => {
-  const { setIsCartExpanded, isCartExpanded } = useContext(CartContext);
+  const { setIsCartExpanded, isCartExpanded, cartCount } = useContext(CartContext);
 
   const toggleCart = () => {
     setIsCartExpanded(!isCartExpanded);
@@ -12,7 +12,7 @@ const CartIcon = () => {
   return (
     <div className='cart-icon-container' onClick={toggleCart} >
       <Icon className='shopping-icon' />
-      <span className='item-count'>00</span>
+      <span className='item-count'>{cartCount}</span>
     </div>
   );
 };
