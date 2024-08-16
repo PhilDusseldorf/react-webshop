@@ -9,7 +9,16 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  collection,
+  writeBatch,
+  query,
+  getDocs,
+} from "firebase/firestore";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
@@ -37,6 +46,44 @@ export const signInWithGooglePopup = () =>
   signInWithPopup(auth, googleProvider);
 
 export const db = getFirestore();
+
+export const addCollectionAndDocument = async (collectionKey, objectsToAdd) => {
+  try {
+    const collectionRef = collection(db, collectionKey);
+    const batch = writeBatch(db);
+    console.log("objectsToAdd");
+    console.log(objectsToAdd);
+    console.log("starting forEach");
+    objectsToAdd.forEach((object) => {
+      // Überprüfen, ob object.title existiert
+      if (object.title) {
+        const docRef = doc(collectionRef, object.title.toLowerCase());
+        batch.set(docRef, object);
+      } else {
+        console.warn("Missing title in object:", object);
+      }
+    });
+
+    await batch.commit();
+    console.log("Import done!");
+  } catch (error) {
+    console.error("Error importing collection:", error);
+  }
+};
+
+export const getCollectionAndDocuments = async (collectionName) => {
+  const collectionRef = collection(db, collectionName);
+  const q = query(collectionRef);
+
+  const querySnapshot = await getDocs(q);
+  const collectionMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
+    const { title, items } = docSnapshot.data();
+    acc[title.toLowerCase()] = items;
+    return acc;
+  }, {});
+
+  return collectionMap;
+};
 
 export const createUserDocFromAuth = async (
   userAuth,
