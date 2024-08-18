@@ -1,0 +1,38 @@
+.categories-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: lightgray;
+
+
+    span {
+        margin: auto;
+        cursor: pointer;
+    }
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+  
+    h2 {
+      cursor: pointer;
+    }
+    
+    span {
+      color: lightgrey;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+  }
+  
+  .products-container {
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 60px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 10px;
+    row-gap: 50px;
+  }
